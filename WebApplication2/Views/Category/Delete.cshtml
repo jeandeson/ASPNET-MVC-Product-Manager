@@ -1,0 +1,47 @@
+﻿@model WebApplication2.Models.Category
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Remoção de Categorias";
+}
+
+<form asp-action="Delete">
+    <div clss="card">
+        <div class="card-header bg-warning">
+            Você tem certeza que deseja deletar isso?
+        </div>
+        <div class="card-header">
+            Deletar Categoria
+        </div>
+        <div class="card-body">
+            <dl class="row m-0">
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.CategoryId)
+                </dt>
+                <dl class="col-sm-10">
+                    @Html.DisplayFor(model => model.CategoryId)
+                </dl>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.CategoryName)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.CategoryName)
+                </dd>
+            </dl>
+        </div>
+        <div class="card-footer">
+            <input type="hidden" asp-for="CategoryId" />
+            <input type="submit" value="Delete" class="btn btn-danger" />
+            <a class="btn btn-warning" asp-action="Index">Back to List</a>
+        </div>
+    </div>
+</form>
+
+@section ScriptPage{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('a.active').removeClass('active');
+            $('a#category').addClass('active');
+        });
+    </script>
+}

@@ -1,0 +1,39 @@
+﻿@model WebApplication2.Models.Category
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.title = "Informações das Categorias";
+}
+
+<div class="card">
+    <div class="card-header"><h4>Detalhes da categoria</h4></div>
+    <div class="card-body">
+        <dl class="row m-0">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.CategoryId)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.CategoryId)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.CategoryName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.CategoryName)
+            </dd>
+        </dl>
+    </div>
+    <div class="card-footer">
+        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.CategoryId">Edit</a>
+        <a class="btn btn-warning" asp-action="Index">Back to List</a>
+    </div>
+</div>
+
+@section ScriptPage{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('a.active').removeClass('active');
+            $('a#category').addClass('active');
+        });
+    </script>
+}

@@ -1,0 +1,53 @@
+﻿@model WebApplication2.Models.Manufacturer
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.title = "Criação de Categorias";
+}
+
+<form asp-action="Create" id="manufacturer-create-form">
+    <div class="card">
+        <div class="card-header">
+            <h4>Criar nova categoria</h4>
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label mr">Nome da categoria</label>
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-person fs-5"></i>
+                    </span>
+                    <input id="Name" name="Name" minlength="3" type="text" required class="form-control required">
+                </div>
+                <div class="text-danger"></div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <input type="submit" value="Create" class="btn btn-primary" />
+            <a class="btn btn-warning" asp-action="Index">Back to List</a>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+@section ScriptPage{
+    <script>
+        $(document).ready(function () {
+            $('a.active').removeClass('active');
+            $('a#manufacturer').addClass('active');
+            $("#manufacturer-create-form").validate(
+                {
+                    errorPlacement: function (error, element) {
+                        error.appendTo(element.parent().siblings(':last'));
+                    },
+                    errorClass: "text-danger",
+                    validClass: "text-success",
+                });
+        });
+    </script>
+}

@@ -1,0 +1,57 @@
+﻿@model WebApplication2.Models.Category
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.title = "Edição de Categorias";
+}
+
+<form asp-action="Edit" id="category-edit-form">
+    <div class="card">
+        <div class="card-header">
+            <h4>Criar nova categoria</h4>
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                <label asp-for="CategoryName" class="form-label"></label>
+               <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-person fs-5"></i>
+                    </span>
+                    <input id="ManufacturerId" hidden value="@Model.CategoryId">
+                    <input id="CategoryName" name="CategoryName" minlength="3" type="text" required class="form-control required">
+               </div>
+                <div class="text-danger"></div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <input type="submit" value="Salvar" class="btn btn-primary" />
+            <a class="btn btn-warning" asp-action="Index">Voltar para lista</a>
+        </div>
+        <div id="summary"></div>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+@section ScriptPage{
+    <script>
+        $(document).ready(function () {
+            $('a.active').removeClass('active');
+            $('a#category').addClass('active');
+            $.validator.setDefaults({ ignore: ":hidden" });
+            $("#category-edit-form").validate(
+                {
+                    errorPlacement: function (error, element) {
+                        error.appendTo(element.parent().siblings(':last'));
+                    },
+                    errorClass: "text-danger",
+                    validClass: "text-success",
+                });
+
+        });
+    </script>
+}

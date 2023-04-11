@@ -1,0 +1,65 @@
+﻿@model WebApplication2.Models.Product
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form asp-action="Create" id="product-create-form">
+    <div class="card">
+        <div class="card-header">
+            <h4>Criar novo produto</h4>
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                <label for="Name"  class="form-label mr">Nome do produto</label>
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-tag-fill fs-5"></i>
+                    </span>
+                    <input name="Name" id="Name" required minlength="3" class="form-control" />
+                </div>
+                <div class="text-danger"></div>
+            </div>
+            <div class="mb-3">
+                <div class="form-group">
+                    <label asp-for="CategoryId" class="control-label">Categoria</label>
+                    <select required asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="form-group">
+                    <label asp-for="ManufacturerId" class="control-label">Fabricante</label>
+                    <select required asp-for="ManufacturerId" class="form-control" asp-items="ViewBag.ManufacturerId"></select>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-warning">Back to List</a>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+@section ScriptPage{
+    <script>
+        $(document).ready(function () {
+            $('a.active').removeClass('active');
+            $('a#product').addClass('active');
+            $("#product-create-form").validate(
+                {
+                    errorPlacement: function (error, element) {
+                        error.appendTo(element.parent().siblings(':last'));
+                    },
+                    errorClass: "text-danger",
+                    validClass: "text-success",
+                });
+        });
+    </script>
+}

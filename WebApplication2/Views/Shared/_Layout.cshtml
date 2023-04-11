@@ -1,0 +1,92 @@
+﻿
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - WebApplication2</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/WebApplication2.styles.css" asp-append-version="true" />
+    <style>
+        .main {
+            min-height: 84vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+    @RenderSection("styles",false)
+</head>
+<body>
+    
+    <header class="">
+       
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-action="Index" asp-controller="Home"> <img src="/assets/icons/brand.svg" alt="Logo" width="30" height="30" class="d-inline-block align-text-top"></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item" id="li-home">
+                            @Html.ActionLink("Home", "Index", "Home", null, new {@class = "nav-link ", @id="home"})
+                        </li>
+                        <li class="nav-item" id="li-category">
+                            @Html.ActionLink("Categorias", "Index", "Category", null, new { @class = "nav-link ", @id="category" })
+                            </li>
+                        <li class="nav-item" id="li-manufacturer">
+                            @Html.ActionLink("Fabricantes", "Index", "Manufacturer", null, new {@class = "nav-link ", @id="manufacturer"})
+                        </li>
+                        <li class="nav-item" id="li-product">
+                            @Html.ActionLink("Produtos", "Index", "Product", null, new {@class = "nav-link", @id="Product"})
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main class="main">
+        @if (@TempData["message"] != null)
+        {
+            <div class="toast position-absolute top-0 end-0 align-items-center text-white bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        @TempData["message"]
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        }
+        <div class="col-sm-9 col-md-9 p-5 ">
+                @RenderBody()
+        </div>
+    </main>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2023 - WebApplication2 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+    @RenderSection("ScriptPage",	false)
+    <script type="text/javascript">
+        var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+        var toastList = toastElList.map(function (toastEl) {
+          var toast = new bootstrap.Toast(toastEl, { autohide: true, delay: 5000 });
+          toast.show();
+          return toast
+        });    
+    </script>
+</body>
+</html>
+
+

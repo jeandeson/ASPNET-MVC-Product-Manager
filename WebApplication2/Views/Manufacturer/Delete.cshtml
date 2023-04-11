@@ -1,0 +1,41 @@
+﻿@model WebApplication2.Models.Manufacturer
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.title = "Remoção de Fabricantes";
+}
+
+<form asp-action="Delete">
+    <div clss="card">
+        <div class="card-header bg-warning">
+            Você tem certeza que deseja deletar isso?
+        </div>   
+        <div class="card-header">
+            Deletar fabricante
+        </div>
+        <div class="card-body">
+            <dl class="row m-0">
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Name)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Name)
+                    </dd>
+                </dl>
+        </div>
+        <div class="card-footer">
+            <input type="hidden" asp-for="ManufacturerId" />
+            <input type="submit" value="Delete" class="btn btn-danger" />
+            <a class="btn btn-warning" asp-action="Index">Back to List</a>
+        </div>
+    </div>
+</form>
+
+@section ScriptPage{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('a.active').removeClass('active');
+            $('a#manufacturer').addClass('active');
+        });
+    </script>
+}

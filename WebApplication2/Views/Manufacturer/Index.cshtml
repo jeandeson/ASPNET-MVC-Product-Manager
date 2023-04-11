@@ -1,0 +1,66 @@
+﻿@model IEnumerable<WebApplication2.Models.Manufacturer>
+
+@{
+    Layout = "../Shared/_Layout.cshtml";
+    ViewBag.title = "Listagem dos Fabricantes";
+}
+
+<div class="card">
+    <div class="card-header bg-prymary">Relação dos fabricantes cadastrados</div>
+    <div class="card-body">
+        <table id="table" class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        Manufacturer id
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </th>
+                    <th>
+                        Actions
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td >
+                            @Html.DisplayFor(modelItem => item.ManufacturerId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.ManufacturerId">Edit</a>
+                            <a class="btn btn-info" asp-action="Details" asp-route-id="@item.ManufacturerId">Details</a> 
+                            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.ManufacturerId">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="card-footer bg-prymary">
+        <p>
+            @Html.ActionLink("Create New", "Create", "Manufacturer", null, new {@class = "btn btn-outline-success"})
+        </p>
+    </div>
+</div>
+
+
+@section ScriptPage{
+    <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap4.min.js "></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('a.active').removeClass('active');
+            $('a#manufacturer').addClass('active');
+            $('#table').DataTable({
+                "order": [[0, "asc"]]
+            });
+        });
+    </script>
+}
+
