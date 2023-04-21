@@ -1,4 +1,4 @@
-﻿@model WebApplication2.Models.Product
+﻿@model Product
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -10,41 +10,7 @@
         <div class="card-header">
             <h4>Editar produto <span class="text-primary">@Model.Name</span></h4>
         </div>
-        <div class="card-body">
-            <div class="mb-3">
-                <label asp-for="Name" class="form-label">Nome do Produto</label>
-                <div class="input-group">
-                    <span class="input-group-text">
-                        <i class="bi bi-person fs-5"></i>
-                    </span>
-                    <input id="productId" hidden value="@Model.ProductId">
-                    <input id="Name" value="@Model.Name" name="Name" minlength="3" type="text" class="form-control">
-                </div>
-                <div class="text-danger"></div>
-            </div>
-            <div class="mb-3">
-                <div class="input-group">
-                    <span class="input-group-text">
-                        <i class="bi bi-person fs-5"></i>
-                    </span>
-                    <select asp-for="CategoryId" required class="form-control" asp-items="@ViewBag.CategoryId">Categoria</select>
-                </div>
-                <div class="text-danger"></div>
-            </div>
-            <div class="mb-3">
-                <div class="input-group">
-                    <span class="input-group-text">
-                        <i class="bi bi-person fs-5"></i>
-                    </span>
-                    <select asp-for="ManufacturerId" required class="form-control" asp-items="@ViewBag.ManufacturerId">Fabricante</select>
-                </div>
-                <div class="text-danger"></div>
-            </div>
-        </div>
-        <div class="card-footer">
-            <input type="submit" class="btn btn-primary" />
-            <a class="btn btn-warning" asp-action="Index">Back to List</a>
-        </div>
+        <partial name="~/Views/_Partial/Card/Product-Card.cshtml" for="@Model" />
     </div>
 </form>
 

@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Server Error";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Server Error</h1>
+<p>An unexpected error has occurred.</p>
+@if (ViewBag.StatusCode != null)
+{
+    <p>status: @ViewBag.StatusCode</p>
+}
+@if (ViewBag.ErrorMessage != null)
+{
+    <p>message: @ViewBag.ErrorMessage</p>
+}

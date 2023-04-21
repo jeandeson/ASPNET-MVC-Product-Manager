@@ -1,4 +1,4 @@
-﻿@model WebApplication2.Models.Category
+﻿@model Category
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -10,24 +10,7 @@
         <div class="card-header">
             <h4>Criar nova categoria</h4>
         </div>
-        <div class="card-body">
-            <div class="mb-3">
-                <label asp-for="CategoryName" class="form-label"></label>
-               <div class="input-group">
-                    <span class="input-group-text">
-                        <i class="bi bi-person fs-5"></i>
-                    </span>
-                    <input id="ManufacturerId" hidden value="@Model.CategoryId">
-                    <input id="CategoryName" name="CategoryName" minlength="3" type="text" required class="form-control required">
-               </div>
-                <div class="text-danger"></div>
-            </div>
-        </div>
-        <div class="card-footer">
-            <input type="submit" value="Salvar" class="btn btn-primary" />
-            <a class="btn btn-warning" asp-action="Index">Voltar para lista</a>
-        </div>
-        <div id="summary"></div>
+        <partial name="~/Views/Partial/Card/Category-Card" for="@Model" />
     </div>
 </form>
 

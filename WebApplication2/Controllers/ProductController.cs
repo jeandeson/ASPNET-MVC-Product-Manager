@@ -1,31 +1,58 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
-using WebApplication2.Contexts;
-using WebApplication2.Models;
-namespace aspnet_5.controllers
+using Persistence.Contexts;
+using Model.Registrations;
+using Service.Registrations;
+using Service.Tables;
+
+namespace WebApplication2.controllers
 {
     public class ProductController : Controller
     {
-        private readonly EFContext _context;
-        public ProductController(EFContext context)
+        private readonly ProductService _productService;
+        private readonly CategoryService _categoryService;
+        private readonly ManufacturerService _manufacturerService;
+        public ProductController(ProductService productService, CategoryService categoryService, ManufacturerService manufacturerService )
         {
-            _context = context;
+            _productService = productService;
+            _categoryService = categoryService;
+            _manufacturerService = manufacturerService;
         }
+
+        private IActionResult GetViewByProductId(long? id)
+        {
+            if( id == null)
+            {
+                return RedirectToAction("Index");
+            }
+            Product produto = _productService.GetProductById(id);
+            return View(produto);
+        }
+
+        private void PopulateViewBag(Product? product = null)
+        {
+            if(product == null)
+            {
+                ViewBag.CategoryId = new SelectList(_categoryService.GetCategoriesOrderedByName(), "CategoryId", "CategoryName");
+                ViewBag.ManufacturerId = new SelectList(_manufacturerService.GetManufacturersOrderedByName(), "ManufacturerId", "Name");
+            }
+            else
+            {
+                ViewBag.CategoryId = new SelectList(_categoryService.GetCategoriesOrderedByName(), "CategoryId", "CategoryName", product.CategoryId);
+                ViewBag.ManufacturerId = new SelectList(_manufacturerService.GetManufacturersOrderedByName(), "ManufacturerId", "Name", product.ManufacturerId);
+            }
+        }
+
         public IActionResult Index()
-        {   
-            IEnumerable<Product> products = _context.Products
-                .Include((product) => product.Category)
-                .Include(product => product.Manufacturer)
-                .OrderBy(n => n.Name);
+        {
+            IOrderedQueryable<Product> products = _productService.GetProdctsOrderedByName();
             return View(products);
         }
 
         public IActionResult Create()
         {
-            ViewBag.CategoryId = new SelectList(_context.Categories.OrderBy(category => category.CategoryName), "CategoryId", "CategoryName");
-            ViewBag.ManufacturerId = new SelectList(_context.Manufacturers.OrderBy(Manufacturer => Manufacturer.Name), "ManufacturerId", "Name");
+            PopulateViewBag();
             return View();
         }
 
@@ -33,25 +60,17 @@ namespace aspnet_5.controllers
         [HttpPost]
         public IActionResult Create(Product product)
         {
-            _context.Products.Add(product);
-            _context.SaveChanges();
+            if (ModelState.IsValid)
+            {
+                _productService.InsertProduct(product);
+            }
             return RedirectToAction("Index");
         }
 
-        public IActionResult Edit(int? id)
+        public IActionResult Edit(long? id)
         {
-           if(id == null)
-            {
-                return BadRequest();
-            }
-            Product? product = _context.Products.Find(id);
-            if(product == null)
-            {
-                return NotFound();
-            }
-            ViewBag.CategoryId = new SelectList(_context.Categories.OrderBy(product => product.CategoryName), "CategoryId", "CategoryName", product.CategoryId);
-            ViewBag.ManufacturerId = new SelectList(_context.Manufacturers.OrderBy(manufacturer => manufacturer.Name), "ManufacturerId", "Name", product.ManufacturerId);
-            return View(product);
+            PopulateViewBag(_productService.GetProductById(id));
+            return GetViewByProductId(id);
         }
 
         [ValidateAntiForgeryToken]
@@ -60,55 +79,26 @@ namespace aspnet_5.controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Entry(product).State = EntityState.Modified;
-                _context.SaveChanges();
+                _productService.UpdateProduct(product);
             }
             return RedirectToAction("Index");
         }
 
-        public IActionResult Details(int? id)
+        public IActionResult Details(long? id)
         {
-            if(id == null)
-            {
-                return BadRequest();
-            }
-            Product? product = _context.Products.Where(p => p.ProductId == id)
-                .Include(m => m.Manufacturer)
-                .Include(c => c.Category).First(); ;
-            if(product == null)
-            {
-                return NotFound();
-            }
-            return View(product);
+            return GetViewByProductId(id);
         }
 
-        public IActionResult Delete(int? id)
+        public IActionResult Delete(long? id)
         {
-            if(id == null)
-            {
-                return BadRequest();
-            }
-            Product? product = _context.Products.Where(p => p.ProductId == id)
-                .Include(m => m.Manufacturer)
-                .Include(c => c.Category).First();
-            if(product == null)
-            {
-                return NotFound();
-            }
-            return View(product);
+            return GetViewByProductId(id);
         }
 
         [AutoValidateAntiforgeryToken]
         [HttpPost] 
-        public IActionResult Delete(int id)
+        public IActionResult Delete(long id)
         {
-            Product? product = _context.Products.Find(id);
-            if(product == null)
-            {
-                return NotFound();
-            }
-            _context.Products.Remove(product);
-            _context.SaveChanges();
+            _productService.DeleteProduct(id);
             return RedirectToAction("Index");
         }
     }

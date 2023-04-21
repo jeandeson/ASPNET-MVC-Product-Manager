@@ -1,19 +1,28 @@
-﻿using WebApplication2.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using WebApplication2.Contexts;
-
-namespace aspnet_5.controllers
+﻿using Microsoft.AspNetCore.Mvc;
+using Model.Tables;
+using Service.Tables;
+namespace WebApplication2.controllers
 {
     public class CategoryController : Controller
-    {   private readonly EFContext _context;
-        public CategoryController(EFContext context) 
+    {   
+        private readonly CategoryService _categoryService;
+        public CategoryController(CategoryService categoryService) 
         { 
-           _context = context;
+           _categoryService = categoryService;
+        }
+
+        private IActionResult GetViewById(long? id = null)
+        {
+            if(id == null)
+            {
+                return RedirectToAction("Index");
+            }
+            Category? category = _categoryService.GetCategoryById(id);
+            return View(category);
         }
         public IActionResult Index()
         {
-            return View(_context.Categories.OrderBy((category) => category.CategoryId));
+            return View(_categoryService.GetCategoriesOrderedByName());
         }
 
         public IActionResult Create()
@@ -21,62 +30,30 @@ namespace aspnet_5.controllers
             return View();
         }
 
+        public IActionResult Edit(long? id)
+        {
+            return GetViewById(id);
+        }
+
         public IActionResult Details(long? id)
         {
-            if (id == null)
-            {
-                return BadRequest();
-            }
-            Category? category = _context.Categories.Find(id);
-            if(category == null)
-            {
-                return NotFound();
-            }
-            return View(category);
+            return GetViewById(id);
         }
 
         public IActionResult Delete(long? id)
-        {   
-            if (id == null)
-            {
-                return BadRequest();
-            }
-            Category? category = _context.Categories.Find(id);
-            if (category == null)
-            {
-                return NotFound();
-            }
-            
-            return View(category);
+        {
+            return GetViewById(id);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(long id)
+        public IActionResult Create(Category category)
         {
-            Category? category = _context.Categories.Find(id);
-            if (category == null)
+            if (ModelState.IsValid)
             {
-                return NotFound();
+                _categoryService.InsertCategory(category);
             }
-            _context.Categories.Remove(category);
-            _context.SaveChanges();
             return RedirectToAction("index");
-        }
-
-        public IActionResult Edit(long? id)
-        {
-            if (id == null)
-            {
-                return BadRequest();
-            }
-            Category? category = _context.Categories.Find(id);
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            return View(category);
         }
 
         [HttpPost]
@@ -85,22 +62,18 @@ namespace aspnet_5.controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Entry(category).State = EntityState.Modified;
-                _context.SaveChanges();
+                _categoryService.UpdateCategory(category);
             }
             return RedirectToAction("index");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Category category)
-        {   
-            if (ModelState.IsValid)
-            {
-                _context.Categories.Add(category);
-                _context.SaveChanges();
-            }
+        public IActionResult Delete(long id)
+        {
+            _categoryService.DeleteCategory(id);
             return RedirectToAction("index");
         }
+
     }
 }

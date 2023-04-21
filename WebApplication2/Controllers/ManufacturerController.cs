@@ -1,20 +1,28 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Net;
-using WebApplication2.Contexts;
-using WebApplication2.Models;
-
-namespace WebApplication2.Controllers
+using Model.Registrations;
+using Service.Tables;
+namespace WebApplication2.controllers
 {
     public class ManufacturerController : Controller
     {
-        private readonly EFContext _context;
-        public ManufacturerController(EFContext context) {
-            _context = context;
+        private readonly ManufacturerService _manfactuerService;
+        public ManufacturerController(ManufacturerService manfactuerService)
+        {
+            _manfactuerService = manfactuerService;
+        }
+
+        private IActionResult GetViewById(long? id = null)
+        {
+            if (id == null)
+            {
+                return RedirectToAction("Index");
+            }
+            Manufacturer? manufacturer = _manfactuerService.GetManufacturerById(id);
+            return View(manufacturer);
         }
         public IActionResult Index()
         {
-            return View(_context.Manufacturers.OrderBy(manufacter => manufacter.ManufacturerId));
+            return View(_manfactuerService.GetManufacturersOrderedByName());
         }
 
         public IActionResult Create()
@@ -22,80 +30,50 @@ namespace WebApplication2.Controllers
             return View();
         }
 
-        [AutoValidateAntiforgeryToken]
-        [HttpPost]
-        public IActionResult Create(Manufacturer manufacturer) {
-            _context.Manufacturers.Add(manufacturer);
-            _context.SaveChanges();
-            return RedirectToAction("Index");
-        }
-        
         public IActionResult Edit(long? id)
         {
-            if(id == null)
-            {
-                return BadRequest();
-            }
-            Manufacturer? manufacturer = _context.Manufacturers.Find(id);
-            if(manufacturer == null)
-            {
-                return NotFound();
-            }
-            return View(manufacturer);
-        }
-
-        [AutoValidateAntiforgeryToken]
-        [HttpPost]
-        public IActionResult Edit(Manufacturer manufacturer)
-        {
-            if(ModelState.IsValid) {
-                _context.Entry(manufacturer).State = EntityState.Modified;
-                _context.SaveChanges();
-            }
-            return RedirectToAction("Index");
+            return GetViewById(id);
         }
 
         public IActionResult Details(long? id)
         {
-            if(id == null)
-            {
-                return BadRequest();
-            }
-            Manufacturer? manufacturer = _context.Manufacturers.Find(id);
-            if(manufacturer == null)
-            {
-                return NotFound();
-            }
-            return View(manufacturer);
+            return GetViewById(id);
         }
 
         public IActionResult Delete(long? id)
         {
-            if (id == null)
-            {
-                return BadRequest();
-            }
-            Manufacturer? manufacturer = _context.Manufacturers.Find(id);
-            if (manufacturer == null)
-            {
-                return NotFound();
-            }
-            return View(manufacturer);
+            return GetViewById(id);
         }
 
-        [AutoValidateAntiforgeryToken]
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(Manufacturer manufacturer)
+        {
+            if (ModelState.IsValid)
+            {
+                _manfactuerService.InsertManufacturer(manufacturer);
+            }
+            return RedirectToAction("index");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(Manufacturer manufacturer)
+        {
+            if (ModelState.IsValid)
+            {
+                _manfactuerService.UpdateManufacturer(manufacturer);
+            }
+            return RedirectToAction("index");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(long id)
         {
-            Manufacturer? manufacturer = _context.Manufacturers.Find(id);
-            if(manufacturer == null)
-            {
-                return NotFound();
-            }
-            _context.Manufacturers.Remove(manufacturer);
-            _context.SaveChanges();
-            TempData["message"] = $"Fabricante {manufacturer.Name.ToUpper()} foi removido";
-            return RedirectToAction("Index");
+            _manfactuerService.DeleteManufacturer(id);
+            return RedirectToAction("index");
         }
+
     }
 }

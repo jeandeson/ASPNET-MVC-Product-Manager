@@ -1,4 +1,4 @@
-﻿@model WebApplication2.Models.Manufacturer
+﻿@model Manufacturer
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -8,11 +8,11 @@
 <form asp-action="Create" id="manufacturer-create-form">
     <div class="card">
         <div class="card-header">
-            <h4>Criar nova categoria</h4>
+            <h4>Criar novo fabricante</h4>
         </div>
         <div class="card-body">
             <div class="mb-3">
-                <label asp-for="Name" class="form-label mr">Nome da categoria</label>
+                <label asp-for="Name" class="form-label mr">Nome do fabricante</label>
                 <div class="input-group">
                     <span class="input-group-text">
                         <i class="bi bi-person fs-5"></i>
