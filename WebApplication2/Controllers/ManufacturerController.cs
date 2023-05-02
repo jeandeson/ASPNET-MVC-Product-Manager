@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Model.Registrations;
 using Service.Tables;
 namespace WebApplication2.controllers
 {
-    public class ManufacturerController : Controller
+    [Authorize]
+    public class ManufacturerController : Controller, IManufacturerController
     {
         private readonly ManufacturerService _manfactuerService;
         public ManufacturerController(ManufacturerService manfactuerService)

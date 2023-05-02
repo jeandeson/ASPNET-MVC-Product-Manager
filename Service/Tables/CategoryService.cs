@@ -1,22 +1,24 @@
 ﻿using Model.Errors;
 using Model.Tables;
 using Persistence.DAL.Tables;
+using Service.Interfaces;
 using System;
 using System.Linq;
 using System.Net;
 
 namespace Service.Tables
 {
-    public class CategoryService
+    public class CategoryService : ICategoryService
     {
         private readonly CategoryDAL _categoryDAL;
-        public CategoryService(CategoryDAL categoryDAL) { 
+        public CategoryService(CategoryDAL categoryDAL)
+        {
             _categoryDAL = categoryDAL;
         }
         public IOrderedQueryable<Category> GetCategoriesOrderedByName()
         {
             IOrderedQueryable<Category>? categories = _categoryDAL.GetCategoriesOrderedByName();
-            if(categories == null)
+            if (categories == null)
             {
                 throw new NotFoundException("no categories were found.");
             }
@@ -42,12 +44,12 @@ namespace Service.Tables
             {
                 throw new BadRequestException($"object {category.CategoryName} was not inserted into database");
             }
-        } 
+        }
         public void UpdateCategory(Category category)
         {
             bool isUpdated = _categoryDAL.UpdateCategory(category);
             if (!isUpdated)
-            {   
+            {
                 throw new BadRequestException($"object {category.CategoryName} was not updated into database");
             }
         }

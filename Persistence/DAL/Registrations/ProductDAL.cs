@@ -3,14 +3,16 @@ using Microsoft.Extensions.Logging;
 using Model.Errors;
 using Model.Registrations;
 using Persistence.Contexts;
+using Persistence.Interfaces;
 
 namespace Persistence.DAL.Registrations
 {
-    public class ProductDAL
+    public class ProductDAL : IProductDAL
     {
         private readonly ILogger<ProductDAL> _logger;
         private readonly EFContext _context;
-        public ProductDAL(EFContext context, ILogger<ProductDAL> logger) {
+        public ProductDAL(EFContext context, ILogger<ProductDAL> logger)
+        {
             _context = context;
             _logger = logger;
         }
@@ -18,18 +20,19 @@ namespace Persistence.DAL.Registrations
         {
             try
             {
-                return  _context.Products
+                return _context.Products
                 .Include(p => p.Category)
                 .Include(p => p.Manufacturer)
                 .OrderBy(p => p.Name);
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 _logger.LogInformation(exception, "Fail trying get Get Products ordered by name.");
                 throw new InternalServerErrorException(exception.Message);
             }
         }
-        public Product? GetProductById(long id) {
+        public Product? GetProductById(long id)
+        {
             try
             {
                 return _context.Products.Where(p => p.ProductId == id).Include(p => p.Category).Include(p => p.Category).FirstOrDefault();
@@ -40,20 +43,20 @@ namespace Persistence.DAL.Registrations
                 throw new InternalServerErrorException(exception.Message);
             }
         }
-        public bool InsertProduct(Product product)
+        public Product? InsertProduct(Product product)
         {
             try
             {
-                _context.Products.Add(product);
+                var result =_context.Products.Add(product);
                 _context.SaveChanges();
-                return true;
+                return result.Entity;
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 _logger.LogInformation(exception, "Fail trying insert Product {name}.", product.Name);
                 throw new InternalServerErrorException(exception.Message);
             }
-        }   
+        }
         public bool UpdateProduct(Product product)
         {
             try
@@ -68,7 +71,8 @@ namespace Persistence.DAL.Registrations
                 throw new InternalServerErrorException(exception.Message);
             }
         }
-        public bool DeleteProduct(Product product) {
+        public bool DeleteProduct(Product product)
+        {
             try
             {
                 _context.Remove(product);

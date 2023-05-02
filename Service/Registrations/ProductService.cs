@@ -1,14 +1,16 @@
 ﻿using Model.Errors;
 using Model.Registrations;
 using Persistence.DAL.Registrations;
+using Persistence.Interfaces;
+using Service.Interfaces;
 using System.Linq;
 
 namespace Service.Registrations
 {
-    public class ProductService
+    public class ProductService : IProductService
     {
-        private readonly ProductDAL _productDAL;
-        public ProductService(ProductDAL productDAL)
+        private readonly IProductDAL _productDAL;
+        public ProductService(IProductDAL productDAL)
         {
             _productDAL = productDAL;
         }
@@ -17,8 +19,8 @@ namespace Service.Registrations
             return _productDAL.GetProdctsOrderedByName();
         }
         public Product GetProductById(long? id)
-        {   
-            if(id == null)
+        {
+            if (id == null)
             {
                 throw new BadRequestException($"id cannot be null or less than or equal to zero, id: {id}");
             }
@@ -29,17 +31,20 @@ namespace Service.Registrations
             }
             return product;
         }
-        public void InsertProduct(Product product)
+        public Product InsertProduct(Product product)
         {
-            bool isInserted = _productDAL.InsertProduct(product);
-            if(!isInserted) 
-            {
+            Product? insertedProduct = _productDAL.InsertProduct(product);
+          
+            if(insertedProduct == null) 
+            {   
                 throw new BadRequestException($"object {product.Name} was not inserted into database");
             }
+          
+            return insertedProduct;
         }
         public void UpdateProduct(Product product)
         {
-            bool isUpdated = _productDAL.InsertProduct(product);
+            bool isUpdated = _productDAL.UpdateProduct(product);
             if (!isUpdated)
             {
                 throw new BadRequestException($"object {product.Name} was not inserted into database");

@@ -1,0 +1,30 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container my-5">
+    <h1 class="text-center mb-5">Register</h1>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form action="/Account/Register" method="post">
+                <div asp-validation-summary="All" class="alert alert-danger"></div>
+                <div class="mb-3">
+                    <label for="InputEmail" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="InputEmail" name="Email" aria-describedby="emailHelp" required>
+                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="InputPassword" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="InputPassword" name="Password" required>
+
+                </div>
+                <div class="mb-3">
+                    <label for="InputConfirmPassword" class="form-label">Confirm Password</label>
+                    <input type="password" class="form-control" id="InputConfirmPassword" name="ConfirmPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+        </div>
+    </div>
+</div>

@@ -3,16 +3,18 @@ using Model.Registrations;
 using Model.Tables;
 using Persistence.DAL.Registrations;
 using Persistence.DAL.Tables;
+using Persistence.Interfaces;
+using Service.Interfaces;
 using System;
 using System.Linq;
 using System.Net;
 
 namespace Service.Tables
 {
-    public class ManufacturerService
+    public class ManufacturerService : IManufacturerService
     {
-        private readonly ManufacturerDAL _manufacturerDAL;
-        public ManufacturerService(ManufacturerDAL manufacturerDAL)
+        private readonly IManufacturerDAL _manufacturerDAL;
+        public ManufacturerService(IManufacturerDAL manufacturerDAL)
         {
             _manufacturerDAL = manufacturerDAL;
         }

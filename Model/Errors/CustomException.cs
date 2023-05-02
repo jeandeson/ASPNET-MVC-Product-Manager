@@ -7,7 +7,7 @@ using System.Threading.Tasks;
  
 namespace Model.Errors
 {
-    public class CustomException : Exception
+    public class CustomException : Exception, ICustomException
     {
         public HttpStatusCode StatusCode { get; set; }
         public CustomException(HttpStatusCode statusCode, string message) : base(message)

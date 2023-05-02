@@ -1,19 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Model.Tables;
 using Service.Tables;
 namespace WebApplication2.controllers
 {
-    public class CategoryController : Controller
-    {   
+    [Authorize]
+    public class CategoryController : Controller, ICategoryController
+    {
         private readonly CategoryService _categoryService;
-        public CategoryController(CategoryService categoryService) 
-        { 
-           _categoryService = categoryService;
+        public CategoryController(CategoryService categoryService)
+        {
+            _categoryService = categoryService;
         }
 
         private IActionResult GetViewById(long? id = null)
         {
-            if(id == null)
+            if (id == null)
             {
                 return RedirectToAction("Index");
             }

@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebApplication2.controllers
 {
-    public class ErrorController : Controller
-    {   
+    public class ErrorController : Controller, IErrorController
+    {
         [HttpGet("/Error/{statusCode:int}")]
         public IActionResult Index(int statusCode = 500)
         {

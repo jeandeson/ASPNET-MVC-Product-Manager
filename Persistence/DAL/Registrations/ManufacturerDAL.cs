@@ -3,10 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Model.Errors;
 using Model.Registrations;
+using Persistence.Interfaces;
 
 namespace Persistence.DAL.Tables
 {
-    public class ManufacturerDAL
+    public class ManufacturerDAL : IManufacturerDAL
     {
         private readonly EFContext _context;
         private readonly ILogger<ManufacturerDAL> _logger;

@@ -1,12 +1,13 @@
-﻿using Model.Tables;
+﻿using Model.Interfaces;
+using Model.Tables;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Model.Registrations
 {
-    public class Product
+    public class Product : IProduct
     {
-        [DisplayName("Id")]   
+        [DisplayName("Id")]
         public long ProductId { get; set; } = 0;
         [DisplayName("Nome")]
         [StringLength(100, MinimumLength = 10, ErrorMessage =

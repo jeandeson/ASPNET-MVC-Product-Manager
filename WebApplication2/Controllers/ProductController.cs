@@ -5,34 +5,36 @@ using Persistence.Contexts;
 using Model.Registrations;
 using Service.Registrations;
 using Service.Tables;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApplication2.controllers
 {
-    public class ProductController : Controller
+    [Authorize]
+    public class ProductController : Controller, IProductController
     {
         private readonly ProductService _productService;
         private readonly CategoryService _categoryService;
         private readonly ManufacturerService _manufacturerService;
-        public ProductController(ProductService productService, CategoryService categoryService, ManufacturerService manufacturerService )
+        public ProductController(ProductService productService, CategoryService categoryService, ManufacturerService manufacturerService)
         {
             _productService = productService;
             _categoryService = categoryService;
             _manufacturerService = manufacturerService;
         }
 
-        private IActionResult GetViewByProductId(long? id)
+        public IActionResult GetViewByProductId(long? id)
         {
-            if( id == null)
+            if (id == null)
             {
                 return RedirectToAction("Index");
             }
-            Product produto = _productService.GetProductById(id);
-            return View(produto);
+            Product product = _productService.GetProductById(id);
+            return View(product);
         }
 
         private void PopulateViewBag(Product? product = null)
         {
-            if(product == null)
+            if (product == null)
             {
                 ViewBag.CategoryId = new SelectList(_categoryService.GetCategoriesOrderedByName(), "CategoryId", "CategoryName");
                 ViewBag.ManufacturerId = new SelectList(_manufacturerService.GetManufacturersOrderedByName(), "ManufacturerId", "Name");
@@ -95,7 +97,7 @@ namespace WebApplication2.controllers
         }
 
         [AutoValidateAntiforgeryToken]
-        [HttpPost] 
+        [HttpPost]
         public IActionResult Delete(long id)
         {
             _productService.DeleteProduct(id);
