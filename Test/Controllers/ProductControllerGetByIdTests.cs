@@ -8,6 +8,7 @@ using Service.Tables;
 using WebApplication2.controllers;
 using Persistence.DAL.Registrations;
 using AutoFixture;
+using Model.Errors;
 
 namespace Test.Controllers
 {
@@ -37,6 +38,24 @@ namespace Test.Controllers
             Assert.Equal(product.CreatedAt, result.CreatedAt);
             
             productRepository.Verify(pr => pr.InsertProduct(It.IsAny<Product>()), Times.Once);
+        }
+
+        [Fact]
+        public void InvalidProduct_InsertProductCalled_ReturnInvalidProduct()
+        {
+            //arrange
+            var fixture = new Fixture();
+            fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+
+            var product = fixture.Create<Product>();
+            var productRepository = new Mock<IProductDAL>();
+            var productService = new ProductService(productRepository.Object);
+            productRepository.Setup(pr => pr.InsertProduct(product)).Returns(product);
+            product = new Product { CategoryId = null, ManufacturerId = null, ProductId = 0 };
+
+            //act + Assert
+            var exception = Assert.Throws<BadRequestException>(() => productService.InsertProduct(product));
+            Assert.Equal(exception.Message, $"object {product.Name} was not inserted into database");
         }
 
     }
